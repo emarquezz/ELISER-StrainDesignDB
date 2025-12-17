@@ -1,9 +1,15 @@
+
+
 # A database of over 15,000 strain design publications reveals a conserved set of metabolic engineering targets
 
-**Authors**: Elisa Márquez-Zavala¹, Francesca Di Bartolomeo², Daniel Machado¹(*)  
+<p align="center">
+  <img src="img/Ecoli_cerevisiae.png" width="500">
+</p>
+
+**Authors**: Elisa Márquez-Zavala¹, Francesca Di Bartolomeo², Daniel Machado¹(\*)  
 ¹ Department of Biotechnology and Food Science, NTNU, Trondheim, Norway  
 ² SINTEF Industry, Trondheim, Norway  
-(*) Corresponding author: daniel.machado@ntnu.no
+(\*) Corresponding author: daniel.machado@ntnu.no
 
 ## Abstract
 Microbial biotechnology has the potential to address several societal issues through the sustainable production of industrially relevant compounds. Despite decades of successful cases, rational engineering of microbial metabolism is still a complex process due to the fine balance between nutrient supply, allocation of cellular resources, energy demand and redox balancing. In this work, we implemented a text-mining workflow for metabolic engineering and compiled a **database of experimentally validated strain design strategies** from over **15.000** research articles, which includes information on **host strain**, **target compounds**, and **gene modifications**. This large dataset reveals trends on the selection of suitable hosts for different kinds of products and the respective gene targets. Despite the wide variety of microbes and products, we observe a **conserved set of target metabolic genes** associated with central carbon metabolism, especially in upper glycolysis, pentose-phosphate pathway, citric acid cycle, and fermentative pathways. The most distinguishing feature among strain design strategies seems not to be **which genes are targeted**, but rather the **direction** in which they are modified (increased or decreased expression). Controlling flux at **key branching points** and **redox balancing** reactions is thus a critical engineering step to steer metabolism. Our collection of 25 years of literature can provide a stepping stone for starting new strain design projects without reinventing the wheel.
