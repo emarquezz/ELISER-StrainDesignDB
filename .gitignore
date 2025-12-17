@@ -208,3 +208,6 @@ __marimo__/
 /src/03_Extract_information/Full_UniProt
 /src/03_Extract_information/Genes
 /src/03_Extract_information/KEGG_genes
+/src/03_Extract_information/04_Gene_Modification/metanetx
+src/03_Extract_information/04_Gene_Modification/.DS_Store
+src/03_Extract_information/01_Product_extraction/.DS_Store
