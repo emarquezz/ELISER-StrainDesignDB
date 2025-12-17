@@ -1,6 +1,6 @@
 
 
-# A database of over 15,000 strain design publications reveals a conserved set of metabolic engineering targets
+# A database of over 15,000 strain design publications reveals a conserved set of metabolic engineering targets 🎯
 
 <p align="center">
   <img src="img/Ecoli_cerevisiae.png" width="500">
