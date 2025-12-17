@@ -2,7 +2,7 @@
 __pycache__/
 *.py[codz]
 *$py.class
-
+*.DS_Store
 # C extensions
 *.so
 
@@ -211,3 +211,4 @@ __marimo__/
 /src/03_Extract_information/04_Gene_Modification/metanetx
 src/03_Extract_information/04_Gene_Modification/.DS_Store
 src/03_Extract_information/01_Product_extraction/.DS_Store
+src/.DS_Store
