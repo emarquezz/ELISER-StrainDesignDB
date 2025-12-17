@@ -1,6 +1,6 @@
 # A database of over 16,000 strain design publications reveals a conserved set of metabolic engineering targets
 
-**Authors**: Elisa Márquez-Zavala¹, Francesca Di Bartolomeu², Daniel Machado¹(*)  
+**Authors**: Elisa Márquez-Zavala¹, Francesca Di Bartolomeo², Daniel Machado¹(*)  
 ¹ Department of Biotechnology and Food Science, NTNU, Trondheim, Norway  
 ² SINTEF Industry, Trondheim, Norway  
 (*) Corresponding author: daniel.machado@ntnu.no
