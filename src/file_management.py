@@ -14,7 +14,15 @@ def get_files_dir(directory='ELISER-StrainDesignDB'):
 
 
 
-def check_save_file(dataframe, file_name, file_path, input_dir=False):
+import pickle
+
+def check_save_file(
+    dataframe,
+    file_name,
+    file_path,
+    input_dir=False,
+    **kwargs
+):
     BASE_DIR, INPUT_DIR, OUTPUT_DIR = get_files_dir()
 
     # Choose output directory
@@ -27,10 +35,8 @@ def check_save_file(dataframe, file_name, file_path, input_dir=False):
     # Handle name collisions
     counter = 1
     while file_output.exists():
-        file_output = (
-            file_output.with_name(
-                f"{file_output.stem}_new_v{counter}{file_output.suffix}"
-            )
+        file_output = file_output.with_name(
+            f"{file_output.stem}_new_v{counter}{file_output.suffix}"
         )
         counter += 1
 
@@ -38,19 +44,20 @@ def check_save_file(dataframe, file_name, file_path, input_dir=False):
     suffix = file_output.suffix.lower()
 
     if suffix == ".json":
-        dataframe.to_json(file_output)
+        dataframe.to_json(file_output, **kwargs)
 
     elif suffix == ".csv":
-        dataframe.to_csv(file_output)
+        dataframe.to_csv(file_output, **kwargs)
 
     elif suffix in {".pickle", ".pkl"}:
-        dataframe.to_pickle(file_output)
+        dataframe.to_pickle(file_output, **kwargs)
 
     elif suffix == ".sav":
         with open(file_output, "wb") as f:
-            pickle.dump(dataframe, f)
+            pickle.dump(dataframe, f, **kwargs)
 
     else:
         raise ValueError(f"Unsupported file type: {suffix}")
 
     print("Saved file in:", file_output)
+    return file_output

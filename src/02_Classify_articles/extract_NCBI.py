@@ -92,8 +92,8 @@ def fetch_PMC_record(pm_ids, scrapy_url=False):
 
 file='list_journals_avoid.json'
 base, input_dir, output_dir = get_files_dir()
-input_dir += '/Journals/Avoid/'
-avoid_journals = read_json(input_dir+file)
+input_dir = input_dir /"Journals"/"Avoid"
+avoid_journals = read_json(input_dir / file)
 
 def build_journal_query(avoid_journals, positive_set=True):
     operator = 'NOT' if positive_set else 'AND'
