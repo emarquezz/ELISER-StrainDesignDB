@@ -1,0 +1,225 @@
+Product	Intended usage	product class
+(2S)-NARINGENIN	pharmaceuticals	chalcone
+(2S)-PINOCEMBRIN	food additives	phenolics
+1_2-PROPANEDIOL	polymers	diols
+1_3-PROPANEDIOL	polymers	diols
+1_4-BUTANEDIOL	polymers	diols
+1-BUTANOL	biofuels	alcohols
+1-HEXADECANOL	cosmetics	alcohols,fatty acids
+1-PROPANOL	biofuels	alcohols
+2-(4-HYDROXYPHENYL)ETHANOL	pharmaceuticals	amino acids
+2,3-BUTANEDIOL	polymers	diols
+2-METHYL-1-BUTANOL	biofuels	alcohols
+2-PHENYLETHANOL	food additives,cosmetics	amino acids
+2-PYRONE-4_6-DICARBOXYLIC ACID	polymers	amino acids
+3-HP	organic acids	organic acids
+3-METHYL-1-BUTANOL	biofuels	alcohols
+4-COURMARIC ACID	cosmetics	phenolics
+4-HYDROXY-2(OR 5)-ETHYL-5(OR 2)-METHYL-3(2H)-FURANONE	food additives	chalcone
+4-HYDROXYPHENYLACETIC ACID	pharmaceuticals	amino acids
+4-HYDROXYPHENYLLACTIC ACID	pharmaceuticals	amino acids
+5-AMINOLEVULINIC ACID	polymers	diamine
+5-AMINOVALERATE	polymers	biopolymer
+6-DEOXYERYTHRONOLIDE B	pharmaceuticals	polyketide
+ABIETADIENE	pharmaceuticals	terpenoids
+ACETALALDEHYDE	biofuels	aldehydes
+ACETONE	biofuels	solvents
+ACETYL-COA	biofuels	metabolic intermediates
+ADIPIC ACID	polymers	dicarboxylic acids
+A-FARNESENE	biofuels	terpenoids
+ALANINE-GLUTAMINE	food additives	amino acids
+ALPHA-PINENE	biofuels	terpenoids
+ALPHA-SANTALENE	pharmaceuticals	terpenoids
+AMINOVALERATE	polymers	biopolymer
+AMORPHADIENE	pharmaceuticals	terpenoids
+AMYLASE	sugars	protein
+ANTEISO-BRANCHED FATTY ACIDS	biofuels	fatty acids
+ANTIBODIES	pharmaceuticals	protein
+ASTRAGALIN	pharmaceuticals	phenolics
+AVND	pharmaceuticals	polyketide
+BETA-AMYRIN	pharmaceuticals	terpenoids
+BETA-CAROTENE	food additives	terpenoids
+BIODIESEL	biofuels	fatty acids
+BIOMASS	biomass	biomass
+BISABOLENE	biofuels	terpenoids
+BUTYRATE	biofuels	fatty acids
+C16:0 FATTY ALCOHOLS	biofuels	alcohols
+CADAVERINE	polymers	diamine
+CAFFEIC ACID	food additives	phenolics
+CAROTENOIDS	food additives	terpenoids
+CIS-ABIENOL	pharmaceuticals	terpenoids
+CUBEBOL	pharmaceuticals	terpenoids
+CYTOPLASMIC DISULFIDE-BONDED PROTEINS	pharmaceuticals	protein
+DAMP4 PEPTIDE	pharmaceuticals	protein
+DEOXYVIOLACEIN	pharmaceuticals	chalcone
+DHAP	metabolic intermediate	amino acids
+D-HYDROXYISOVALERIC ACID	pharmaceuticals	amino acids
+DIHYDOXYACETONE	food additives,cosmetics	metabolic intermediates
+DIHYDROXYACETONE	food additives,cosmetics	metabolic intermediates
+D-LACTATE	polymers,food additives	organic acids
+ERIODICTYOL	food additives	phenolics
+ETHANOL	biofuels	alcohols
+ETHYL BUTYRATE	cosmetics	esters
+ETHYLENE	polymers	hydrocarbon
+ETHYLENE GLYCOL	polymers	ethylene glycol
+FAEE	biofuels	fatty acids
+FATTY ACIDS	biofuels	fatty acids
+FERULIC ACID	cosmetics	phenolics
+FLAVONOIDS	food additives,pharmaceuticals	flavanoids
+FP-151 PROTEIN	pharmaceuticals	protein
+FUMARIC ACID	food additives	organic acids
+GERANIOL	pharmaceuticals	terpenoids
+GFP	biomass	protein
+GLUCARIC ACID	polymers	flavanoids
+GLUTARATE	polymers	organic acids
+GLUTARIC ACID	polymers	biopolymer
+GLYCEROL	food additives,feedstock	fatty acids
+GLYCEROL 3-PHOSPHATE	pharmaceuticals	metabolic intermediates
+GLYCOGLYCEROLIPIDS	cosmetics,pharmaceuticals	fatty acids
+H2	biofuels	hydrogen
+H2,ETHANOL	biofuels	hydrogen,alcohols
+HG2+_INTRACELLULAR	bioremediation	heavy metals
+HYDROXYFATTY ACIDS	polymers	fatty acids
+HYDROXYTYROSOL	pharmaceuticals	amino acids
+ISOBUTANOL	biofuels	alcohols
+ISOPENTANOL	biofuels	alcohols
+ISOPRENE	biofuels	terpenoids
+ISOPRENOL	biofuels	terpenoids
+ISOPROPANOL	biofuels	alcohols
+ITACONIC ACID	polymers	organic acids
+LACTATE	organic acids	organic acids
+LACTIC ACID	organic acids	organic acids
+L-ALANINE	food additives	amino acids
+L-CARNITINE	pharmaceuticals	diamine
+L-DOPA	pharmaceuticals	amino acids
+LEVOPIMARADIENE	pharmaceuticals	terpenoids
+L-FUMARATE	organic acids,polymers	organic acids
+L-GLUTAMINE	food additives	amino acids
+LINALOOL	food additives	terpenoids
+L-LACTATE	organic acids	organic acids
+L-LACTIC ACID	organic acids	organic acids
+L-LYSINE	food additives	amino acids
+LONG-CHAIN FATTY ACIDS	biofuels	fatty acids
+L-PHENYALANINE	food additives	amino acids
+L-PHENYLALANINE	food additives,pharmaceuticals	amino acids
+L-THREONINE	food additives	amino acids
+L-TRYOSINE	food additives	amino acids
+L-TYROSINE	food additives	amino acids
+L-VALINE	food additives	amino acids
+LYCOPENE	food additives	terpenoids
+MALATE	organic acids	organic acids
+MEMBRANE PROTEIN	pharmaceuticals	protein
+METHYL KETONES	cosmetics	ketones
+MEVALONATE_PHOSPHATE	metabolic intermediate	metabolic intermediates
+MILTIRADIENE	food additives,pharmaceuticals	terpenoids
+MUCONIC ACID	polymers	aromatics
+N-ACETYLGLUCOSAMINE	food additives	amino sugars
+N-ACETYLNEURAMINIC ACID	pharmaceuticals	amino sugars
+NADPH	metabolic intermediate	metabolic intermediates
+NARINGENIN	pharmaceuticals	flavanoids
+N-BUTANOL	biofuels	alcohols
+N-HEXANOL	biofuels	alcohols
+NI2+_INTRACELLULAR	bioremediation	heavy metals
+PATCHOULOL	pharmaceuticals	terpenoids
+PDNA	pharmaceuticals	dna
+PERILLYL_ALCOHOL	biofuels	terpenoids
+PHA	polymers	biopolymer
+PHB	polymers	biopolymer
+PHENYLACETIC ACID	pharmaceuticals	amino acids
+PHENYLLACTIC ACID	pharmaceuticals	amino acids
+PLASMIDDNA	pharmaceuticals	dna
+PRENOL	biofuels	terpenoids
+PRODUCTS	none	none
+PROPANOL	biofuels	alcohols
+PROTEIN	pharmaceuticals	protein
+PROTEIN-GLYCOSYLATION	biomass	protein
+PROTEINS	pharmaceuticals	protein
+PROTOPANAXADIOL	pharmaceuticals	terpenoids
+PUTRESCINE	polymers	diamine
+PYRUVATE	metabolic intermediate	organic acids
+R-1-PHENYLETHANOL	pharmaceuticals	alcohols
+R-3HB	polymers	biopolymer
+R-3HV	polymers	biopolymer
+RESVERATROL	food additives	chalcone
+RIBOFLAVIN	pharmaceuticals	vitamins
+RR-2_3-BDO	polymers	biopolymer
+S-3HB	polymers	biopolymer
+S-3HV	polymers	biopolymer
+SABINENE	biofuels	terpenoids
+SALVIANIC ACID	pharmaceuticals	organic acids
+SCLAREOL	pharmaceuticals	terpenoids
+SERINE-RICH PROTEINS	pharmaceuticals	protein
+SHIKIMATE	metabolic intermediate	amino acids
+SHIKIMIC ACID	metabolic intermediate	amino acids
+SILK	polymers	protein
+STEARIDONIC ACID	food additives	fatty acids
+STYRENE	polymers	phenolics
+SUCCINATE	polymers,food additives	organic acids
+TAXADIENE	pharmaceuticals	terpenoids
+TRIACETIC ACID LACTONE	food additives,polymers	chalcone
+VALENCENE	pharmaceuticals	terpenoids
+VANILLIN	food additives	phenolics
+VIOLACEIN	pharmaceuticals	chalcone
+XYLITOL	food additives	sugar alcohol
+XYLITOL, RIBITOL	food additives	sugar alcohol
+XYLONATE	food additives,polymers	sugar alcohol
+(Z)-BIFORMENE	pharmaceuticals	terpenoids
+(4S)-LIMONENE	biofuels	terpenoids
+19-HYDROXY-MILTIRADIENE	pharmaceuticals	terpenoids
+INDIGOIDINE	pharmaceuticals	amino acids
+RG3 GINSENOSIDES	pharmaceuticals	terpenoids
+ALKANES	biofuels	hydrocarbon
+3-BETA-HYDROXY-MANOYL OXIDE	pharmaceuticals	terpenoids
+(R)-ACETOIN	food additives	amino acids
+(+)-CATECHIN	food additives	phenolics
+ACETOL	polymers	organic acids
+1_2_4-BUTANETRIOL	pharmaceuticals,biofuels	diols
+TAXANES	pharmaceuticals	terpenoids
+L-ARGININE	food additives	amino acids
+ACETATE	polymers	organic acids
+18-HYDROXY-MILTIRADIENE	pharmaceuticals	terpenoids
+5-HYDROXYANTHRANILATE	food additives	amino acids
+MORPHINE	pharmaceuticals	terpenoids
+ALL-TRANS-RETINOL	food additives	terpenoids
+PROPIONATE	polymers	fatty acids
+PHENOL	polymers	phenolics
+POLY (3-HYDROXYBUTYRATE-CO-3-HYDROXYPROPIONATE)	polymers	biopolymer
+MYO-INOSITOL	food additives,pharmaceuticals	metabolic intermediates
+PENICILLIN G	pharmaceuticals	amino acids
+CIS-CIS-MUCONATE	pharmaceuticals	amino acids
+PENTADECAHEPTAENE	biofuels	hydrocarbon
+PROPANE	biofuels	hydrocarbon
+QUERCETIN 3-O-XYLOSIDE	pharmaceuticals	flavanoids
+GLYCOLATE	cosmetics	organic acids
+4-AMINOBENZOATE	pharmaceuticals,cosmetics	amino acids
+3-HYDROXY-GAMMA-BUTYROLACTONE	pharmaceuticals	organic acids
+OMEGA-HYDROXYACIDS	biofuels	fatty acids
+(S)-RETICULINE	pharmaceuticals	terpenoids
+L-METHIONINE	food additives	amino acids
+BRANCHED FATTY ACIDS	biofuels	fatty acids
+CYANOCOB(III)ALAMIN	metabolic intermediate	metabolic intermediates
+MANOYL OXIDE	pharmaceuticals	terpenoids
+CHONDROITIN	pharmaceuticals	amino sugars
+ETHANOL,H2	biofuels	alcohols,hydrogen
+L-ERYTHRO-5,6,7,8-TETRAHYDROBIOPTERIN	pharmaceuticals	metabolic intermediates
+CURCUMINOIDS	food additives,pharmaceuticals	terpenoids
+D-CYCLOSERINE	pharmaceuticals	amino acids
+ALKENES	biofuels	hydrocarbon
+4-HYDROXYCOUMARIN	pharmaceuticals	vitamins
+RH2 GINSENOSIDES	pharmaceuticals	terpenoids
+L-DIHOMOMETHIONINE	food additives	amino acids
+MANOOL	cosmetics	terpenoids
+TRANS-CINNAMATE	cosmetics	phenolics
+DEOXYCYTIDINE	pharmaceuticals	metabolic intermediates
+ROSMARINATE	pharmaceuticals	phenolics
+PINOSYLVIN	pharmaceuticals	terpenoids
+L-SERINE	food additives	amino acids
+B-ALANINE	food additives	amino acids
+D-GALACTONATE	cosmetics,polymers	metabolic intermediates
+3-BETA-HYDROXY-MANOOL	pharmaceuticals	terpenoids
+5-HYDROXYTRYPTOPHAN	pharmaceuticals	amino acids
+MEVALONATE	metabolic intermediate	metabolic intermediates
+HEXANOATE	food additives	fatty acids
+GLYCOSYLATED PROTEIN	pharmaceuticals	protein
+2-METHYLBUT-3-EN-2-OL	food additives,biofuels	terpenoids
+FATTY ALCOHOLS	biofuels	fatty acids
