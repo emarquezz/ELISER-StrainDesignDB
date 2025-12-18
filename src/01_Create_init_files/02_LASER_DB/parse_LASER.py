@@ -1,4 +1,8 @@
 import ssl
+import urllib.request
+
+
+from functools import reduce
 
 # SSL context for accessing NCBI FTP over HTTPS
 # (certificate verification disabled for compatibility)
@@ -28,12 +32,9 @@ def get_tags(papers_sets, database_url):
 
         year_url = database_url+year+'/Record'
 
-        papers_def = {key: {} for key in papers}
-        failed = True
-
         for record in papers:
             html = get_LASER_html(year_url, record)
-
+            
             for line in html:
                     line=line.decode().rstrip()
                     tag = line.split('=')[0].rstrip()
@@ -48,7 +49,7 @@ def get_tags(papers_sets, database_url):
 
 
 
-def create_primary_tags(papers, record):
+def create_primary_tags(papers, record, full_tags):
     #print('***',record,'***')
     for tag in full_tags['Set']:
         if 'Mutant' not in tag:
