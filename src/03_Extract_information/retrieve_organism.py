@@ -25,7 +25,7 @@ def nospecial(text):
     return text
 
 
-taxonomy = INPUT_DIR+'/Taxonomy/Filtered_taxonomy.csv'
+taxonomy = INPUT_DIR+'/Taxonomy/Filtered_taxonomy_new_v.csv'
 taxonomy = pd.read_csv(taxonomy)
 true_species = taxonomy.Full_name.dropna().drop_duplicates()
 true_genus = taxonomy.Genus.dropna().drop_duplicates()
@@ -71,27 +71,17 @@ sm_genus_full_species =  sm_genus_full_species.str.rstrip('.')
 
 
 
+genus_list_cap = genus_list.str.capitalize()
 
-def format_file(dataframe, column):
-    # Remove specific special characters without altering word order
-    classified_data_org = dataframe[column].str.replace('\xa0', ' ', regex=False)
-    classified_data_org = classified_data_org.str.replace('\u2009', ' ', regex=False)
-    classified_data_org = classified_data_org.str.replace('-', ' ', regex=False)
-    
-    # Remove special char
-    classified_data_org = classified_data_org.apply(nospecial)
-    
-    # Ensure specific phrases remain intact
-    classified_data_org = classified_data_org.str.replace('sp strain ', 'sp strain', regex=False)
-    
-    # Split strings into lists while maintaining word order
-    classified_data_org = classified_data_org.apply(make_list)
-    
-    # Convert the list of words into a DataFrame
-    classified_data_org = classified_data_org.apply(pd.Series)
-    
-    return classified_data_org
+genus_abbr_list_cap = genus_abbr_list.str.capitalize()
+FULL_SPECIES_SET = set(full_species.dropna().astype(str).str.lower())
+SM_FULL_SPECIES_SET = set(sm_genus_full_species.dropna().astype(str).str.lower())
+SPECIES_CODE_SET = set(species_list.dropna().astype(str).str.lower())
+GENERAL_SET = {"pcc", "spp", "sp"}
 
+other_list = true_species
+other = other_list.str.split(' ').str[-1].drop_duplicates().str.lower()
+SPECIES_CODE_SET.update(set(other.dropna().astype(str).str.lower()))
 
 
 
@@ -116,17 +106,19 @@ species = ['thermocellum', 'thermoautotrophicum', 'heterothallicus',
            'spp', 'pcc6803', 'oleaginosus', 'novicida', 'crescentus',
            'pcc', 'RQ7', 'atcc','PCC']
 species_list = append_species_to_list(species, species_list)
+#fake_organism = ['C reinhardtii', 'C elegans', 'C roseus',
+#                 'M separata','O furnacalis','P sibirica',
+#                'E superba']
 
-fake_organism = ['C reinhardtii', 'C elegans', 'C roseus',
+fake_organism = [ 'C elegans', 'C roseus',
                  'M separata','O furnacalis','P sibirica',
                 'E superba']
 
 
 
-
-
 import re
 
+genus_set = set(genus_list.to_list())
 def make_list(text):
     """
     Convert a string into a filtered list of unique words while maintaining the original order.
@@ -170,12 +162,37 @@ def make_list(text):
     seen = set()
     unique_words = []
     for word in text_list:
-        if (len(word) > 2 and word not in seen) or (len(word)==1 and word in genus_abbr_list.to_list()):
+        if (len(word) > 2 and word not in seen)\
+        or (len(word)<=2 and word.isnumeric())\
+        or (len(word)==1 and word in genus_abbr_list.to_list())\
+        or word=='sp' or word in genus_set:
             seen.add(word)
             unique_words.append(word)
 
     return unique_words
 
+
+
+
+def format_file(dataframe, column):
+    # Remove specific special characters without altering word order
+    classified_data_org = dataframe[column].str.replace('\xa0', ' ', regex=False)
+    classified_data_org = classified_data_org.str.replace('\u2009', ' ', regex=False)
+    classified_data_org = classified_data_org.str.replace('-', ' ', regex=False)
+    
+    # Remove special char
+    classified_data_org = classified_data_org.apply(nospecial)
+    
+    # Ensure specific phrases remain intact
+    classified_data_org = classified_data_org.str.replace('sp strain ', 'sp strain', regex=False)
+    
+    # Split strings into lists while maintaining word order
+    classified_data_org = classified_data_org.apply(make_list)
+    
+    # Convert the list of words into a DataFrame
+    classified_data_org = classified_data_org.apply(pd.Series)
+    
+    return classified_data_org
 
 
 def find_species(sentence):
@@ -381,3 +398,147 @@ def get_full_name(lista, organisms=None, name_dictionary=None):
             return None
     else:
         return None
+    
+    
+    
+    
+    
+    
+# Vectorized version
+
+def detect_organisms_vectorized(
+    df: pd.DataFrame,
+    *,
+    FULL_SPECIES_SET=FULL_SPECIES_SET,
+    SM_FULL_SPECIES_SET=SM_FULL_SPECIES_SET,
+    SPECIES_CODE_SET=SPECIES_CODE_SET,
+    GENERAL_SET=GENERAL_SET,
+    genus_list_cap=genus_list_cap,
+    genus_abbr_list_cap=genus_abbr_list_cap,
+) -> pd.Series:
+
+    tok = df.fillna("").astype(str).to_numpy(object)
+    n, m = tok.shape
+    flat = tok.ravel()
+
+    # Build ONE Series view for all .str ops
+    sflat = pd.Series(flat, copy=False)
+
+    # Non-empty adjacency from original tokens (cheaper than from lowercase)
+    nonempty = (tok != "")
+    nonempty2 = nonempty[:, :-1] & nonempty[:, 1:]
+    nonempty3 = nonempty[:, :-2] & nonempty[:, 1:-1] & nonempty[:, 2:]
+
+    # Length + digit-start masks (aligned later)
+    flat_len = sflat.str.len().to_numpy(np.int16)
+    len_mat = flat_len.reshape(n, m)
+
+    flat_digitstart = sflat.str.match(r"^\d").to_numpy(bool)
+    digitstart_mat = flat_digitstart.reshape(n, m)
+
+    # make valid_pair INCLUDE nonempty2 (so you don't repeat & nonempty2 everywhere)
+    short_pair = (len_mat[:, :-1] == 1) & (len_mat[:, 1:] == 1)
+    valid_pair = nonempty2 & ~short_pair
+
+    # Ban genus starting with digit (aligned to genus position p where p+1 exists)
+    genus_ok = nonempty2 & ~digitstart_mat[:, :-1]
+
+    # Lowercase factorization
+    flat_lc = sflat.str.lower().to_numpy(object)
+    ids_lc, uniques_lc = pd.factorize(flat_lc, sort=False)
+    ids_lc = ids_lc.reshape(n, m).astype(np.int64)
+    u_lc = pd.Index(uniques_lc)
+
+    # Capitalized factorization for genus detection
+    flat_cap = sflat.str.capitalize().to_numpy(object)
+    ids_cap, uniques_cap = pd.factorize(flat_cap, sort=False)
+    ids_cap = ids_cap.reshape(n, m).astype(np.int64)
+    u_cap = pd.Index(uniques_cap)
+
+    # helper: avoid list() for arraylikes
+    def map_to_ids(index: pd.Index, items) -> np.ndarray:
+        if isinstance(items, (set, frozenset)):
+            arr = np.asarray(tuple(items), dtype=object)
+        else:
+            arr = np.asarray(items, dtype=object)
+        idx = index.get_indexer(arr)
+        idx = idx[idx >= 0].astype(np.int64)
+        return np.unique(idx) if idx.size else idx
+
+    general_ids = map_to_ids(u_lc, GENERAL_SET)
+    code_ids    = map_to_ids(u_lc, SPECIES_CODE_SET)
+
+    genus_ids      = map_to_ids(u_cap, genus_list_cap)
+    genus_abbr_ids = map_to_ids(u_cap, genus_abbr_list_cap)
+
+    # Species set -> bigram codes
+    V = len(u_lc) + 1
+
+    def species_set_to_bigram_codes_lc(species_set) -> np.ndarray:
+        gens, specs = [], []
+        for s in species_set:
+            parts = s.split()
+            if len(parts) >= 2:
+                gens.append(parts[0])
+                specs.append(parts[1])
+        if not gens:
+            return np.empty(0, dtype=np.int64)
+        gi = u_lc.get_indexer(np.asarray(gens, dtype=object))
+        si = u_lc.get_indexer(np.asarray(specs, dtype=object))
+        ok = (gi >= 0) & (si >= 0)
+        codes = gi[ok].astype(np.int64) * V + si[ok].astype(np.int64)
+        return np.unique(codes) if codes.size else codes
+
+    full_bigram_codes = species_set_to_bigram_codes_lc(FULL_SPECIES_SET)
+    sm_bigram_codes   = species_set_to_bigram_codes_lc(SM_FULL_SPECIES_SET)
+
+    # Genus detection with fallback-to-abbrev rule
+    cap_g = ids_cap[:, :-1]
+    genus_mask = np.isin(cap_g, genus_ids) & nonempty2
+    has_any_genus = genus_mask.any(axis=1)
+
+    abbr_mask = np.isin(cap_g, genus_abbr_ids) & nonempty2
+    is_genus = (genus_mask | (abbr_mask & (~has_any_genus)[:, None])) & genus_ok
+
+    # Bigram codes on lowercase ids
+    g = ids_lc[:, :-1]
+    s = ids_lc[:,  1:]
+    bigram_code = g * V + s
+
+    # Main masks (valid_pair already includes nonempty2 + removes H 2 / M N)
+    is_full    = is_genus & np.isin(bigram_code, full_bigram_codes) & valid_pair
+    is_general = is_genus & np.isin(s, general_ids) & valid_pair
+    is_sm      = is_genus & np.isin(bigram_code, sm_bigram_codes) & valid_pair
+
+    # general + code trigram
+    third = ids_lc[:, 2:]
+    is_code = np.isin(third, code_ids)
+    is_general_code = is_general[:, :-1] & is_code & nonempty3
+
+    # Yeast last (needs lowercase; reuse flat_lc without reshaping a second time)
+    lc_mat = flat_lc.reshape(n, m)
+    is_yeast = (lc_mat == "yeast").any(axis=1)
+
+    # Assemble
+    out = [None] * n
+    for i in range(n):
+        pos = np.flatnonzero(is_full[i] | is_general[i])
+        if pos.size:
+            orgs = []
+            for p in pos:
+                if p < m - 2 and is_general_code[i, p]:
+                    orgs.append(f"{tok[i, p]} {tok[i, p+1]} {tok[i, p+2]}")
+                else:
+                    orgs.append(f"{tok[i, p]} {tok[i, p+1]}")
+            out[i] = orgs
+            continue
+
+        pos2 = np.flatnonzero(is_sm[i])
+        if pos2.size:
+            out[i] = [f"{tok[i, p]} {tok[i, p+1]}" for p in pos2]
+            continue
+
+        out[i] = "yeast" if is_yeast[i] else None
+
+    return pd.Series(out, index=df.index)
+
