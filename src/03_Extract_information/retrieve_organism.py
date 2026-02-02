@@ -25,7 +25,7 @@ def nospecial(text):
     return text
 
 
-taxonomy = INPUT_DIR+'/Taxonomy/Filtered_taxonomy_new_v.csv'
+taxonomy = INPUT_DIR / 'Taxonomy' / 'Filtered_taxonomy_2026.csv'
 taxonomy = pd.read_csv(taxonomy)
 true_species = taxonomy.Full_name.dropna().drop_duplicates()
 true_genus = taxonomy.Genus.dropna().drop_duplicates()
@@ -589,3 +589,25 @@ def detect_organisms_vectorized(
 
     return pd.Series(out, index=df.index)
 
+
+
+
+def remove_duplicated_organisms(lista):
+    # Handle missing values
+    if lista is None or (isinstance(lista, float) and pd.isna(lista)):
+        return None
+    
+    # Special case for "yeast"
+    if lista == 'yeast':
+        return ['yeast']
+    
+    # If it's a string (not yeast)
+    if isinstance(lista, str):
+        return [lista]
+    
+    # If it's a list/tuple
+    if isinstance(lista, (list, tuple)):
+        return list(set(lista))
+    
+    # Fallback
+    return [lista]
