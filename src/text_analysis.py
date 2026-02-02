@@ -20,6 +20,8 @@ adverb_synsets = list(wordnet.all_synsets('r'))
 for synset in adverb_synsets:
     for lemma in synset.lemmas():
         adjectives_adverbs.add(lemma.name().replace('_',' '))
+numeric_tokens = {n for n in adjectives_adverbs if n.isnumeric()}
+adjectives_adverbs -= numeric_tokens
 
         
 nouns_list = set()
@@ -116,40 +118,15 @@ def get_wordnet_lemmas():
     
     return(complete_verbs,adjectives,adverbs)
 
+def similar_words(your_word, number_syn=20):
+    nlp = spacy.load('en_core_web_lg')
 
-def similar_words(your_word, number_syn=20, oversample=5):
-    #based_on https://stackoverflow.com/questions/54717449/mapping-word-vector-to-the-most-similar-closest-word-using-spacy
-    nlp = spacy.load("en_core_web_lg")
-
-    your_word = your_word.lower()
-    key = nlp.vocab.strings[your_word]
-
+    '''https://stackoverflow.com/questions/54717449/mapping-word-vector-to-the-most-similar-closest-word-using-spacy'''
     ms = nlp.vocab.vectors.most_similar(
-        np.asarray([nlp.vocab.vectors[key]]),
-        n=number_syn * oversample
-    )
-
-    seen_lemmas = set()
-    results = []
-
-    for w in ms[0][0]:
-        word = nlp.vocab.strings[w].lower()
-        lex = nlp.vocab[word]
-
-        if not lex.is_alpha:
-            continue
-
-        # Lemma-based deduplication
-        lemma = nlp(word)[0].lemma_
-
-        if lemma not in seen_lemmas:
-            seen_lemmas.add(lemma)
-            results.append(word)
-
-        if len(results) == number_syn:
-            break
-
-    return results
+        np.asarray([nlp.vocab.vectors[nlp.vocab.strings[your_word]]]), n=number_syn)
+    s_words = [nlp.vocab.strings[w] for w in ms[0][0]]
+    distances = ms[2]
+    return(s_words)
 
 def nospecial(text):
     """
