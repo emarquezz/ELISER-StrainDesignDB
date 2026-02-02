@@ -416,32 +416,47 @@ def detect_organisms_vectorized(
     genus_list_cap=genus_list_cap,
     genus_abbr_list_cap=genus_abbr_list_cap,
 ) -> pd.Series:
+    """
+    Fast vectorized organism detector for token-matrix df (rows=sentences, cols=token positions).
 
+    Core behavior:
+      - genus detection: match genus_list_cap; if none in row then match genus_abbr_list_cap
+      - FULL_SPECIES_SET or species in GENERAL_SET
+      - if species in GENERAL_SET and 3rd token is a "code", append it
+      - 3rd / 4th token “code” is allowed if it is:
+          * a number (e.g. 3)
+          * full uppercase (e.g. ABC)
+          * uppercase with numbers (e.g. A3, AB12, 3AB, A3B)  -> basically /^[A-Z0-9]+$/ (no lowercase)
+        OR it is in SPECIES_CODE_SET (your curated list)
+      - PCC extension remains: if 3rd token is 'pcc' (case-insensitive), then check 4th token with same rule.
+      - SM fallback only if no organisms found
+      - yeast checked last
+      - filter out 1-char genus + 1-char species pairs (e.g. "H 2", "M N")
+      - ban genus starting with a digit (removes "9 PCC 3", "1 SPP 3")
+    """
     tok = df.fillna("").astype(str).to_numpy(object)
     n, m = tok.shape
     flat = tok.ravel()
-
-    # Build ONE Series view for all .str ops
     sflat = pd.Series(flat, copy=False)
 
-    # Non-empty adjacency from original tokens (cheaper than from lowercase)
+    # Non-empty adjacency
     nonempty = (tok != "")
     nonempty2 = nonempty[:, :-1] & nonempty[:, 1:]
     nonempty3 = nonempty[:, :-2] & nonempty[:, 1:-1] & nonempty[:, 2:]
+    nonempty4 = nonempty[:, :-3] & nonempty[:, 1:-2] & nonempty[:, 2:-1] & nonempty[:, 3:]
 
-    # Length + digit-start masks (aligned later)
-    flat_len = sflat.str.len().to_numpy(np.int16)
-    len_mat = flat_len.reshape(n, m)
-
-    flat_digitstart = sflat.str.match(r"^\d").to_numpy(bool)
-    digitstart_mat = flat_digitstart.reshape(n, m)
-
-    # make valid_pair INCLUDE nonempty2 (so you don't repeat & nonempty2 everywhere)
+    # Filter out 1-char+1-char pairs (H 2 / M N)
+    len_mat = sflat.str.len().to_numpy(np.int16).reshape(n, m)
     short_pair = (len_mat[:, :-1] == 1) & (len_mat[:, 1:] == 1)
     valid_pair = nonempty2 & ~short_pair
 
-    # Ban genus starting with digit (aligned to genus position p where p+1 exists)
+    # Ban genus starting with a digit
+    digitstart_mat = sflat.str.match(r"^\d").to_numpy(bool).reshape(n, m)
     genus_ok = nonempty2 & ~digitstart_mat[:, :-1]
+
+    # NEW: "code-like" tokens: number OR ALL-UPPER OR UPPER+NUMBERS (no lowercase)
+    # This single regex covers all three: digits-only, letters-only, alnum uppercase-only
+    code_like_mat = sflat.str.fullmatch(r"[A-Z0-9]+").to_numpy(bool).reshape(n, m)
 
     # Lowercase factorization
     flat_lc = sflat.str.lower().to_numpy(object)
@@ -455,7 +470,7 @@ def detect_organisms_vectorized(
     ids_cap = ids_cap.reshape(n, m).astype(np.int64)
     u_cap = pd.Index(uniques_cap)
 
-    # helper: avoid list() for arraylikes
+    # helper
     def map_to_ids(index: pd.Index, items) -> np.ndarray:
         if isinstance(items, (set, frozenset)):
             arr = np.asarray(tuple(items), dtype=object)
@@ -471,7 +486,7 @@ def detect_organisms_vectorized(
     genus_ids      = map_to_ids(u_cap, genus_list_cap)
     genus_abbr_ids = map_to_ids(u_cap, genus_abbr_list_cap)
 
-    # Species set -> bigram codes
+    # Species set -> bigram codes in lowercase-id space
     V = len(u_lc) + 1
 
     def species_set_to_bigram_codes_lc(species_set) -> np.ndarray:
@@ -492,7 +507,7 @@ def detect_organisms_vectorized(
     full_bigram_codes = species_set_to_bigram_codes_lc(FULL_SPECIES_SET)
     sm_bigram_codes   = species_set_to_bigram_codes_lc(SM_FULL_SPECIES_SET)
 
-    # Genus detection with fallback-to-abbrev rule
+    # Genus detection with fallback-to-abbrev
     cap_g = ids_cap[:, :-1]
     genus_mask = np.isin(cap_g, genus_ids) & nonempty2
     has_any_genus = genus_mask.any(axis=1)
@@ -500,22 +515,44 @@ def detect_organisms_vectorized(
     abbr_mask = np.isin(cap_g, genus_abbr_ids) & nonempty2
     is_genus = (genus_mask | (abbr_mask & (~has_any_genus)[:, None])) & genus_ok
 
-    # Bigram codes on lowercase ids
+    # Bigram ids (lowercase)
     g = ids_lc[:, :-1]
     s = ids_lc[:,  1:]
     bigram_code = g * V + s
 
-    # Main masks (valid_pair already includes nonempty2 + removes H 2 / M N)
     is_full    = is_genus & np.isin(bigram_code, full_bigram_codes) & valid_pair
-    is_general = is_genus & np.isin(s, general_ids) & valid_pair
+    is_general = is_genus & np.isin(s, general_ids)               & valid_pair
     is_sm      = is_genus & np.isin(bigram_code, sm_bigram_codes) & valid_pair
 
-    # general + code trigram
-    third = ids_lc[:, 2:]
-    is_code = np.isin(third, code_ids)
-    is_general_code = is_general[:, :-1] & is_code & nonempty3
+    # --- GENERAL + 3rd/4th token logic
+    third = ids_lc[:, 2:]               # lowercase-id view (for PCC check)
+    third_code_like = code_like_mat[:, 2:]  # string-regex view (fast boolean)
 
-    # Yeast last (needs lowercase; reuse flat_lc without reshaping a second time)
+    #pcc_id = u_lc.get_indexer(np.asarray(["pcc"], dtype=object))[0]
+    pcc_atcc_ids = u_lc.get_indexer(np.asarray(["pcc", "atcc"], dtype=object))
+    pcc_atcc_ids = pcc_atcc_ids[pcc_atcc_ids >= 0]   # keep only valid hits
+
+    # 3rd token allowed if:
+    #   - in SPECIES_CODE_SET (code_ids) OR
+    #   - matches /^[A-Z0-9]+$/ OR
+    #   - is literally 'pcc' (case-insensitive via lowercase ids)
+    #is_code3 = third_code_like | np.isin(third, code_ids) | ((third == pcc_id) if pcc_id >= 0 else False)
+    is_code3 = third_code_like | np.isin(third, code_ids) | np.isin(third, pcc_atcc_ids)
+
+    is_general_code3 = is_general[:, :-1] & is_code3 & nonempty3  # aligns at genus position p
+
+    # 4th token allowed with SAME criteria as 3rd (except PCC special meaning is only for triggering)
+    if pcc_atcc_ids.size > 0 and m >= 4:
+        #is_third_pcc = (third == pcc_id)           # aligns at genus position p
+        is_third_pcc = np.isin(third, pcc_atcc_ids)
+        fourth = ids_lc[:, 3:]
+        fourth_code_like = code_like_mat[:, 3:]
+        is_code4 = fourth_code_like | np.isin(fourth, code_ids)
+        is_general_pcc_code4 = is_general[:, :-2] & is_third_pcc[:, :-1] & is_code4 & nonempty4
+    else:
+        is_general_pcc_code4 = np.zeros((n, max(m - 3, 0)), dtype=bool)
+
+    # Yeast last
     lc_mat = flat_lc.reshape(n, m)
     is_yeast = (lc_mat == "yeast").any(axis=1)
 
@@ -526,16 +563,26 @@ def detect_organisms_vectorized(
         if pos.size:
             orgs = []
             for p in pos:
-                if p < m - 2 and is_general_code[i, p]:
-                    orgs.append(f"{tok[i, p]} {tok[i, p+1]} {tok[i, p+2]}")
+                genus = tok[i, p]
+                species = tok[i, p + 1]
+
+                if p < m - 2 and is_general_code3[i, p]:
+                    t3 = tok[i, p + 2]
+
+                    if p < m - 3 and is_general_pcc_code4.shape[1] > 0 and is_general_pcc_code4[i, p]:
+                        t4 = tok[i, p + 3]
+                        orgs.append(f"{genus} {species} {t3} {t4}")
+                    else:
+                        orgs.append(f"{genus} {species} {t3}")
                 else:
-                    orgs.append(f"{tok[i, p]} {tok[i, p+1]}")
+                    orgs.append(f"{genus} {species}")
+
             out[i] = orgs
             continue
 
         pos2 = np.flatnonzero(is_sm[i])
         if pos2.size:
-            out[i] = [f"{tok[i, p]} {tok[i, p+1]}" for p in pos2]
+            out[i] = [f"{tok[i, p]} {tok[i, p + 1]}" for p in pos2]
             continue
 
         out[i] = "yeast" if is_yeast[i] else None
