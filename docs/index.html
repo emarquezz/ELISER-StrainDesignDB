@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore ELISER, a database of more than 15,000 microbial strain-design publications, including hosts, products, genes, and modification directions."
+    />
+    <meta name="theme-color" content="#fff8fb" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emarquezz.github.io/ELISER-StrainDesignDB/" />
+    <meta property="og:title" content="ELISER Strain Design Explorer" />
+    <meta
+      property="og:description"
+      content="15,798 microbial strain-design publications, made explorable."
+    />
+    <meta
+      property="og:image"
+      content="https://emarquezz.github.io/ELISER-StrainDesignDB/og.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="ELISER Strain Design Explorer with illustrated microbial hosts"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ELISER Strain Design Explorer" />
+    <meta
+      name="twitter:description"
+      content="15,798 microbial strain-design publications, made explorable."
+    />
+    <meta
+      name="twitter:image"
+      content="https://emarquezz.github.io/ELISER-StrainDesignDB/og.png"
+    />
+    <title>ELISER · Strain Design Explorer</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#results">Skip to results</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="ELISER home">
+        <img class="brand-mark" src="./favicon.svg" alt="" width="32" height="32" />
+        <span>ELISER</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#explore">Explore</a>
+        <a href="#insights">Insights</a>
+        <a href="#about">About</a>
+        <a
+          class="nav-github"
+          href="https://github.com/emarquezz/ELISER-StrainDesignDB"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+          <span aria-hidden="true">↗</span>
+          <span class="sr-only"> (opens in a new tab)</span>
+        </a>
+      </nav>
+    </header>
+
+    <aside class="status-banner" aria-label="Development status">
+      <span class="status-label"><i aria-hidden="true"></i> Beta release</span>
+      <p>
+        This explorer is under active development. Its design and functionality may change;
+        the
+        <a
+          href="https://www.sciencedirect.com/science/article/pii/S1096717626000510"
+          target="_blank"
+          rel="noopener noreferrer"
+        >published article<span class="sr-only"> (opens in a new tab)</span></a>
+        and
+        <a
+          href="https://github.com/emarquezz/ELISER-StrainDesignDB"
+          target="_blank"
+          rel="noopener noreferrer"
+        >versioned repository<span class="sr-only"> (opens in a new tab)</span></a>
+        remain the authoritative sources.
+      </p>
+    </aside>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Experimental literature, made explorable</p>
+          <h1 id="hero-title">
+            Find the engineering moves behind <span>microbial production.</span>
+          </h1>
+          <p class="hero-lede">
+            Search 25 years of experimentally reported strain designs by organism,
+            product, gene, and modification direction.
+          </p>
+          <a class="primary-button" href="#explore">
+            Explore the database
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+
+        <figure class="hero-art">
+          <div class="art-frame">
+            <img
+              src="./assets/eliser-versus.webp"
+              alt="Illustration of Saccharomyces cerevisiae and Escherichia coli as competing microbial cell factories"
+              width="1800"
+              height="934"
+            />
+          </div>
+          <figcaption>
+            <span aria-hidden="true"></span>
+            Different hosts. Shared engineering logic.
+          </figcaption>
+        </figure>
+
+        <div class="hero-stats" aria-label="Database summary">
+          <div>
+            <strong id="hero-record-count">15,798</strong>
+            <span>publications</span>
+          </div>
+          <div>
+            <strong id="hero-organism-count">2,370</strong>
+            <span>organism labels</span>
+          </div>
+          <div>
+            <strong id="hero-product-count">4,298</strong>
+            <span>product labels</span>
+          </div>
+          <div>
+            <strong id="hero-gene-count">7,776</strong>
+            <span>gene targets</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="explorer-section" id="explore" aria-labelledby="explore-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Database explorer</p>
+            <h2 id="explore-title">Start with a question.</h2>
+          </div>
+          <p>
+            Combine free-text search with biological filters. Every result links
+            back to its PubMed record.
+          </p>
+        </div>
+
+        <form class="search-panel" id="search-form" role="search">
+          <div class="search-row">
+            <label class="search-field" for="search-input">
+              <span class="search-icon" aria-hidden="true"></span>
+              <span class="sr-only">Search the database</span>
+              <input
+                id="search-input"
+                type="search"
+                autocomplete="off"
+                placeholder="Try “succinate”, “E. coli”, “zwf”, or a paper title…"
+              />
+              <kbd aria-hidden="true">/</kbd>
+            </label>
+            <button class="search-button" id="search-button" type="submit">Search</button>
+          </div>
+
+          <fieldset class="filters">
+            <legend class="sr-only">Database filters</legend>
+            <label>
+              <span>Organism</span>
+              <input id="organism-filter" type="text" placeholder="Any organism" list="organism-suggestions" />
+              <datalist id="organism-suggestions"></datalist>
+            </label>
+            <label>
+              <span>Product</span>
+              <input id="product-filter" type="text" placeholder="Any product" list="product-suggestions" />
+              <datalist id="product-suggestions"></datalist>
+            </label>
+            <label>
+              <span>Gene</span>
+              <input id="gene-filter" type="text" placeholder="Any gene" list="gene-suggestions" />
+              <datalist id="gene-suggestions"></datalist>
+            </label>
+            <label>
+              <span>Modification</span>
+              <select id="direction-filter">
+                <option value="">Any direction</option>
+                <option value="Positive">Positive / increased</option>
+                <option value="Negative">Negative / decreased</option>
+                <option value="Other">Other modification</option>
+              </select>
+            </label>
+            <label>
+              <span>From year</span>
+              <select id="year-from-filter" aria-label="From year"></select>
+            </label>
+            <label>
+              <span>To year</span>
+              <select id="year-to-filter" aria-label="To year"></select>
+            </label>
+          </fieldset>
+
+          <div class="filter-actions">
+            <div id="active-filters" class="active-filters"></div>
+            <button id="clear-filters" class="text-button" type="button">Clear all</button>
+          </div>
+        </form>
+
+        <div class="results-layout">
+          <div class="results-main">
+            <div class="results-toolbar">
+              <div>
+                <p id="result-count" role="status" aria-live="polite" tabindex="-1">Loading the database…</p>
+                <span id="result-context">Preparing records for search</span>
+              </div>
+              <div class="toolbar-actions">
+                <label class="sort-control">
+                  <span>Sort</span>
+                  <select id="sort-select">
+                    <option value="relevance">Best match / newest</option>
+                    <option value="year-desc">Newest first</option>
+                    <option value="year-asc">Oldest first</option>
+                    <option value="title">Title A–Z</option>
+                  </select>
+                </label>
+                <button id="export-button" class="secondary-button" type="button" disabled>
+                  Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div id="loading-state" class="state-card">
+              <span class="loader" aria-hidden="true"></span>
+              <div>
+                <strong>Opening ELISER</strong>
+                <p>Loading the searchable dataset into your browser…</p>
+              </div>
+            </div>
+
+            <div id="error-state" class="state-card error-state" hidden>
+              <span aria-hidden="true">!</span>
+              <div>
+                <strong>The database could not be loaded</strong>
+                <p>Serve this folder through GitHub Pages or a local web server and try again.</p>
+              </div>
+            </div>
+
+            <div id="results" class="results-list" tabindex="-1"></div>
+
+            <nav id="pagination" class="pagination" aria-label="Search result pages" hidden>
+              <button id="previous-page" type="button">← Previous</button>
+              <span id="page-status"></span>
+              <button id="next-page" type="button">Next →</button>
+            </nav>
+          </div>
+
+          <aside class="insights-panel" id="insights" aria-labelledby="insights-title">
+            <div class="insights-heading">
+              <div>
+                <p class="section-kicker">Live view</p>
+                <h3 id="insights-title">Inside these results</h3>
+              </div>
+              <span class="live-pill"><i></i> Filtered</span>
+            </div>
+
+            <div class="direction-summary" id="direction-summary">
+              <div class="summary-number">
+                <strong id="modification-count">—</strong>
+                <span>direction annotations</span>
+              </div>
+              <div class="direction-bar" aria-label="Modification direction distribution">
+                <span class="direction-positive" id="positive-bar"></span>
+                <span class="direction-negative" id="negative-bar"></span>
+                <span class="direction-other" id="other-bar"></span>
+              </div>
+              <div class="direction-legend">
+                <span><i class="positive-dot"></i>Positive <b id="positive-count">—</b></span>
+                <span><i class="negative-dot"></i>Negative <b id="negative-count">—</b></span>
+                <span><i class="other-dot"></i>Other <b id="other-count">—</b></span>
+              </div>
+            </div>
+
+            <div class="ranking-block">
+              <div class="ranking-title">
+                <h4>Top organisms</h4>
+                <span>records</span>
+              </div>
+              <ol id="top-organisms" class="ranking-list"></ol>
+            </div>
+
+            <div class="ranking-block">
+              <div class="ranking-title">
+                <h4>Top products</h4>
+                <span>records</span>
+              </div>
+              <ol id="top-products" class="ranking-list"></ol>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="about-section" id="about" aria-labelledby="about-title">
+        <div class="about-card">
+          <p class="section-kicker">About ELISER</p>
+          <h2 id="about-title">A literature-scale starting point for strain engineering.</h2>
+          <p>
+            ELISER compiles experimentally reported microbial strain-design strategies,
+            connecting host organisms and target products to the genes researchers
+            increased, decreased, or otherwise modified.
+          </p>
+          <div class="about-links">
+            <a href="https://www.sciencedirect.com/science/article/pii/S1096717626000510" target="_blank" rel="noopener noreferrer">
+              Read the published article <span aria-hidden="true">↗</span>
+              <span class="sr-only"> (opens in a new tab)</span>
+            </a>
+            <a href="https://github.com/emarquezz/ELISER-StrainDesignDB" target="_blank" rel="noopener noreferrer">
+              View data and methods <span aria-hidden="true">↗</span>
+              <span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </div>
+        </div>
+        <blockquote>
+          <p>“A stepping stone for starting new strain-design projects without reinventing the wheel.”</p>
+          <cite>Márquez-Zavala, Di Bartolomeo &amp; Machado</cite>
+        </blockquote>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand footer-brand" href="#top">
+        <img class="brand-mark" src="./favicon.svg" alt="" width="32" height="32" />
+        <span>ELISER</span>
+      </a>
+      <p>Experimental literature-informed strain design.</p>
+      <p>Data released under the repository license.</p>
+    </footer>
+  </body>
+</html>

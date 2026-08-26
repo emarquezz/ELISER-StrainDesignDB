@@ -1,115 +1,175 @@
+# A database of over 15,000 strain design publications reveals a conserved set of metabolic engineering targets across microbial hosts and products 🎯
 
-
-# A database of over 15,000 strain design publications reveals a conserved set of metabolic engineering targets 🎯
+**Authors:** Elisa Márquez-Zavala, Francesca Di Bartolomeo, and Daniel Machado  
+**Published in:** *Metabolic Engineering* 96 (2026), 225–233  
+**Article:** [ScienceDirect](https://www.sciencedirect.com/science/article/pii/S1096717626000510) · [DOI: 10.1016/j.ymben.2026.03.017](https://doi.org/10.1016/j.ymben.2026.03.017)
 
 <p align="center">
-  <img src="img/Ecoli_cerevisiae.png" width="500">
+  <a href="https://emarquezz.github.io/ELISER-StrainDesignDB/">
+    <img
+      src="docs/og.png"
+      alt="Open the ELISER Strain Design Explorer"
+      width="760"
+    >
+  </a>
 </p>
 
-**Authors**: Elisa Márquez-Zavala¹, Francesca Di Bartolomeo², Daniel Machado¹(\*)  
-¹ Department of Biotechnology and Food Science, NTNU, Trondheim, Norway  
-² SINTEF Industry, Trondheim, Norway  
-(\*) Corresponding author: daniel.machado@ntnu.no
+<h2 align="center">Explore the database online</h2>
 
-## Abstract
-Microbial biotechnology has the potential to address several societal issues through the sustainable production of industrially relevant compounds. Despite decades of successful cases, rational engineering of microbial metabolism is still a complex process due to the fine balance between nutrient supply, allocation of cellular resources, energy demand and redox balancing. In this work, we implemented a text-mining workflow for metabolic engineering and compiled a **database of experimentally validated strain design strategies** from over **15.000** research articles, which includes information on **host strain**, **target compounds**, and **gene modifications**. This large dataset reveals trends on the selection of suitable hosts for different kinds of products and the respective gene targets. Despite the wide variety of microbes and products, we observe a **conserved set of target metabolic genes** associated with central carbon metabolism, especially in upper glycolysis, pentose-phosphate pathway, citric acid cycle, and fermentative pathways. The most distinguishing feature among strain design strategies seems not to be **which genes are targeted**, but rather the **direction** in which they are modified (increased or decreased expression). Controlling flux at **key branching points** and **redox balancing** reactions is thus a critical engineering step to steer metabolism. Our collection of 25 years of literature can provide a stepping stone for starting new strain design projects without reinventing the wheel.
+<p align="center">
+  <a href="https://emarquezz.github.io/ELISER-StrainDesignDB/">
+    <img
+      src="https://img.shields.io/badge/Open_the_interactive_ELISER_Explorer-4E2C73?style=for-the-badge"
+      alt="Open the interactive ELISER Strain Design Explorer"
+    >
+  </a>
+</p>
 
-> **Repository goals**
-> - Provide data, code, and figures supporting the manuscript.
-> - Enable reproducible extraction, classification, and normalization of literature-derived strain designs.
-> - Offer convenient summaries and visualizations for practitioners.
+<p align="center">
+  Search 15,798 strain-design publications by organism, product, gene,
+  modification direction, and year.
+</p>
 
-## Table of Contents
-- [Repository Structure](#repository-structure)
-- [Installation](#installation)
-- [Data Pipeline](#data-pipeline)
-- [Core Data Schemas](#core-data-schemas)
-- [How to Reproduce](#how-to-reproduce)
-- [Figures & Visualizations](#figures--visualizations)
-- [License](#license)
-- [Citation](#citation)
-- [Contact](#contact)
+## Overview
 
-## Repository Structure
+ELISER is a literature-derived database of experimentally reported microbial
+strain-design strategies. It connects host organisms and target products with
+the genes researchers increased, decreased, or otherwise modified.
 
-```
-├── README.md
-├── docs/
-│   ├── figures/
-│   ├── methods.md
-│   ├── data_dictionary.md
-│   └── pipeline.md
+The collection spans 25 years of literature and reveals recurring metabolic
+engineering targets across diverse microbial hosts and products, particularly
+at central-carbon branch points and reactions involved in redox balance.
+
+## Repository goals
+
+- Provide the data, code, and figures supporting the published article.
+- Enable reproducible extraction, classification, and normalization of
+  literature-derived strain designs.
+- Make the database accessible through an interactive, browser-based explorer.
+- Provide a practical starting point for new strain-engineering projects.
+
+## Quick links
+
+- [Explore the interactive database](https://emarquezz.github.io/ELISER-StrainDesignDB/)
+- [Read the published article](https://www.sciencedirect.com/science/article/pii/S1096717626000510)
+- [Download the authoritative database](files/Output/ELISER_DB_v3.csv)
+- [Browse the source code](src/)
+- [Open an issue](https://github.com/emarquezz/ELISER-StrainDesignDB/issues)
+
+## Repository structure
+
+```text
+ELISER-StrainDesignDB/
+├── docs/                         # GitHub Pages explorer
+│   ├── index.html
+│   ├── app.js
+│   ├── styles.css
+│   ├── favicon.svg
+│   ├── og.png
+│   ├── assets/
+│   └── data/
+│       └── eliser.json           # Browser-ready database
 ├── files/
-│   ├── Input/
-│   │   ├── Journals/
-│   │   ├── LASER/
-│   │   ├── Products/
-│   │   └── Taxonomy/
+│   ├── Input/                    # Input resources used by the pipeline
 │   └── Output/
-│       ├── Articles/
-│       ├── KEGG/
-│       ├── Models/
-│       ├── UniProt/
-│       └── readme.txt
-└── src/
-    ├── 01_Create_init_files/
-    ├── 02_Classify_articles/
-    ├── 03_Extract_information/
-    ├── 04_Figures/
-    ├── data_viz/
-    ├── file_management.py
-    └── text_analysis.py
+│       └── ELISER_DB_v3.csv      # Authoritative database
+├── img/                          # Repository and manuscript figures
+├── scripts/
+│   └── build_web_data.py         # CSV-to-JSON website data builder
+├── src/                          # Extraction, classification, and analysis code
+├── LICENSE
+└── README.md
 ```
 
+## Database fields
 
-## Data Pipeline
+The main database, [`files/Output/ELISER_DB_v3.csv`](files/Output/ELISER_DB_v3.csv),
+contains the following core fields:
 
-**Stages**
-1. **Create initial files**: build seeds for journals, products, taxonomy.
-2. **Classify articles**: fetch metadata, train classifier, label strain-design-relevant articles.
-3. **Extract information**: retrieve full text, extract product, organism, gene targets, and modification directions; normalize via KEGG/UniProt/NCBI.
-4. **Figures**: generate histograms, Sankey plots, and summary visuals.
+| Field | Description |
+| --- | --- |
+| `PMID` | PubMed identifier for the source publication |
+| `Title` | Publication title |
+| `Year` | Publication year |
+| `Organism` | Reported microbial host or hosts |
+| `Product` | Target product or products |
+| `Genes_and_modifications` | Extracted gene targets and their modification directions |
 
-## Core Data Schemas
+The CSV is the authoritative dataset. `docs/data/eliser.json` is a structured,
+browser-friendly representation used by the interactive explorer.
 
-**Articles Table**
-- `article_id`, `doi`, `pmid`, `title`, `journal`, `year`, `is_strain_design`, `has_full_text`, `url_pdf`, `license`, `source`
+## Interactive explorer
 
-**Entities Table**
-- `article_id`, `host_taxon_id`, `host_name`, `product_id`, `product_name`, `evidence_section`, `confidence`
+The static JavaScript explorer supports:
 
-**Gene Modifications Table**
-- `article_id`, `gene_symbol`, `locus_tag`, `uniprot_id`, `kegg_gene_id`, `ec_number`, `pathway`, `mod_type`, `direction`, `evidence_text`, `confidence`
+- Full-text search across titles, organisms, products, and genes.
+- Filters for organism, product, gene, modification direction, and year.
+- Direction-aware gene filtering.
+- Sorting, pagination, live summaries, and filtered CSV export.
+- Direct links from individual records to PubMed.
 
-## How to Reproduce
+Because all filtering happens in the browser, the explorer does not require a
+database server or user account.
 
-###  Notebooks
-Run notebooks in `src/02_Classify_articles/` and `src/03_Extract_information/` in order.
+## Updating the webpage data
 
-## Figures & Visualizations
+After updating `files/Output/ELISER_DB_v3.csv`, regenerate the browser-ready
+JSON from the repository root:
 
-- `Organism_histogram.ipynb` — host distribution
-- `Product_sankey.ipynb` — host/product/target flows
+```bash
+python scripts/build_web_data.py
+```
+
+This writes:
+
+```text
+docs/data/eliser.json
+```
+
+Commit and push the regenerated JSON. GitHub Pages will automatically deploy
+the updated explorer from the `/docs` folder on the `main` branch.
+
+## Data pipeline
+
+The source pipeline is organized into four broad stages:
+
+1. Create the input resources used for journals, products, and taxonomy.
+2. Classify publications for strain-design relevance.
+3. Extract and normalize organisms, products, genes, and modification directions.
+4. Generate database outputs, summaries, and manuscript figures.
+
+The corresponding code is available under [`src/`](src/).
 
 ## License
 
-This repository is released under the **MIT License** (see `LICENSE`).
+This repository is released under the [MIT License](LICENSE).
 
 ## Citation
 
-```
+If you use ELISER or its associated database, please cite the published article:
 
-@article{MarquezZavala2025StrainDesignDB,
+> Márquez-Zavala, E., Di Bartolomeo, F., & Machado, D. (2026). A database of
+> over 15,000 strain design publications reveals a conserved set of metabolic
+> engineering targets across microbial hosts and products. *Metabolic
+> Engineering, 96*, 225–233.
+> https://doi.org/10.1016/j.ymben.2026.03.017
+
+```bibtex
+@article{MarquezZavala2026ELISER,
   title   = {A database of over 15,000 strain design publications reveals a conserved set of metabolic engineering targets across microbial hosts and products},
   author  = {Márquez-Zavala, Elisa and Di Bartolomeo, Francesca and Machado, Daniel},
-  journal = {bioRxiv},
-  year    = {2025},
-  doi     = {10.64898/2025.12.15.694291},
-  note    = {Preprint, not peer-reviewed}
+  journal = {Metabolic Engineering},
+  volume  = {96},
+  pages   = {225--233},
+  year    = {2026},
+  doi     = {10.1016/j.ymben.2026.03.017},
+  url     = {https://www.sciencedirect.com/science/article/pii/S1096717626000510}
 }
-
 ```
 
 ## Contact
 
-For questions, please open an **Issue** or contact the corresponding author: **daniel.machado@ntnu.no**.
+For questions, suggestions, or problems, please
+[open an issue](https://github.com/emarquezz/ELISER-StrainDesignDB/issues) or
+contact the corresponding author at `daniel.machado@ntnu.no`.
+
